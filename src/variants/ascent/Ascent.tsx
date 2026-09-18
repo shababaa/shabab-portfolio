@@ -3,6 +3,7 @@ import { CommandPalette } from '../../components/CommandPalette'
 import { experience, profile, projects, skills } from '../../data/profile'
 import { useKeyChord, useTheme } from '../../lib/hooks'
 import { idleView, Stage, type StageView } from './Stage'
+import { NameMark } from './NameMark'
 import { ThemeToggle } from './ThemeToggle'
 import './ascent.css'
 
@@ -217,7 +218,7 @@ export function Ascent() {
       <main>
         <header>
           <p>12,000 ft · {profile.availability.toLowerCase()}</p>
-          <h1>{profile.name}</h1> 
+          <NameMark name={profile.name} /> 
           <p>
             Software Engineer Intern @ <a href="https://www.uhn.ca/" target="_blank" rel="noopener noreferrer">
               UHN

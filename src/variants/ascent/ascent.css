@@ -352,6 +352,30 @@
   color: var(--text-strong);
 }
 
+.name-fx__ch {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.name-fx__ghost {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.name-fx__live {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.name-fx__sp {
+  display: inline-block;
+  width: 0.35em;
+}
+
 .ascent .lede {
   max-width: 46ch;
   font-size: 18px;
