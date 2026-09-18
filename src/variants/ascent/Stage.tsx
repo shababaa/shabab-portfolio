@@ -19,7 +19,7 @@ export function idleView(): StageView {
     scene: 'idle',
     kicker: 'Based in',
     title: profile.location,
-    body: `School in ${profile.schoolLocation}. Currently at Princess Margaret Cancer Centre.`,
+    body: `School in ${profile.schoolLocation}. Currently at UHN's Princess Margaret Cancer Centre.`,
     where: profile.location,
   }
 }
