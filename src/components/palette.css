@@ -1,0 +1,131 @@
+.palette {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: start center;
+  padding-top: 12vh;
+}
+
+.palette__scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.palette__panel {
+  position: relative;
+  width: min(560px, calc(100vw - 32px));
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+}
+
+.palette__panel input {
+  width: 100%;
+  border: 0;
+  padding: 16px 18px;
+  background: transparent;
+  outline: none;
+}
+
+.palette__panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.palette__panel button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 10px 12px;
+  border-radius: 10px;
+}
+
+.palette__panel em {
+  font-style: normal;
+  opacity: 0.55;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 55%;
+}
+
+.palette__empty,
+.palette__hint {
+  padding: 10px 16px;
+  opacity: 0.55;
+  font-size: 12px;
+}
+
+.palette--hud .palette__panel {
+  background: #07140d;
+  border: 1px solid rgba(124, 255, 178, 0.3);
+  color: #d7ffe9;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+.palette--hud input {
+  color: #7cffb2;
+  border-bottom: 1px solid rgba(124, 255, 178, 0.2);
+}
+
+.palette--hud .is-active {
+  background: rgba(124, 255, 178, 0.12);
+}
+
+.palette--ink .palette__panel {
+  background: #f7f1e6;
+  border: 1px solid #d9cbb6;
+  color: #14110e;
+  font-family: Outfit, system-ui, sans-serif;
+}
+
+.palette--ink .is-active {
+  background: #14110e;
+  color: #f7f1e6;
+}
+
+.palette--orbit .palette__panel {
+  background: #120e1c;
+  border: 1px solid rgba(139, 124, 255, 0.4);
+  color: #efeaff;
+}
+
+.palette--orbit input {
+  color: #cfc6ff;
+}
+
+.palette--orbit .is-active {
+  background: rgba(139, 124, 255, 0.2);
+}
+
+.palette--glass .palette__panel {
+  background: rgba(24, 28, 36, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #eef3ff;
+  backdrop-filter: blur(20px);
+}
+
+.palette--glass .is-active {
+  background: rgba(126, 182, 255, 0.2);
+}
+
+[data-theme='light'] .palette--glass .palette__panel {
+  background: rgba(253, 252, 249, 0.96);
+  border: 1px solid rgba(16, 17, 19, 0.14);
+  color: #1c1d1f;
+}
+
+[data-theme='light'] .palette--glass .is-active {
+  background: rgba(77, 111, 91, 0.16);
+}
