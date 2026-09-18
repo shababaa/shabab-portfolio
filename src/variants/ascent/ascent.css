@@ -174,32 +174,153 @@
   color: var(--text);
 }
 
-.ascent__panel ol {
-  list-style: none;
+.route {
+  position: relative;
   margin: 0 0 auto;
-  padding: 0;
-  font-size: 13px;
-  line-height: 1.45;
-  color: var(--text-soft);
 }
 
-.ascent__panel li {
-  margin-bottom: 8px;
+/* inset by half a row so 0%/100% land exactly on the first and last dot */
+.route__rail {
+  position: absolute;
+  left: 3px;
+  top: 14px;
+  bottom: 14px;
+  width: 1px;
+  background: var(--track);
 }
 
-.ascent__panel button:not(.theme-toggle) {
+.route__flown {
   display: block;
-  margin-top: 10px;
-  color: var(--text);
+  width: 100%;
+  background: var(--accent);
+  transition: height 120ms linear;
+}
+
+.route__needle {
+  position: absolute;
+  left: 50%;
+  width: 13px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--accent);
+  transition: top 120ms linear;
+}
+
+.route ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.route li {
+  margin: 0;
+}
+
+.route button {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  color: var(--text-dim);
+  font: inherit;
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+  transition: color 180ms ease;
+}
+
+.route button:hover {
+  color: var(--text-strong);
+}
+
+.route button.is-current {
+  color: var(--text-strong);
+}
+
+.route__dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--bg-b);
+  box-shadow: inset 0 0 0 1px var(--outline);
+  transition: background 200ms ease, box-shadow 200ms ease, opacity 200ms ease;
+}
+
+.is-passed .route__dot {
+  background: var(--accent);
+  box-shadow: none;
+  opacity: 0.5;
+}
+
+.is-current .route__dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--card-hover);
+}
+
+.route__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.route__ft {
+  margin-left: auto;
+  padding-left: 8px;
+  font-size: 11px;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.is-current .route__ft,
+.route button:hover .route__ft {
+  opacity: 0.85;
+}
+
+.route__layer {
+  padding: 12px 0 2px 18px;
+}
+
+.route__layer button {
+  padding: 0;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.route__layer button:hover {
+  color: var(--text-strong);
+}
+
+.ascent .panel__contact {
+  display: block;
+  margin-top: 20px;
+  padding: 11px 14px;
+  border-radius: 999px;
   background: transparent;
   box-shadow: inset 0 0 0 1px var(--outline);
-  border: 0;
-  border-radius: 999px;
-  padding: 10px 14px;
-  text-align: center;
-  font: inherit;
+  color: var(--text-strong);
   font-size: 13px;
   font-weight: 500;
+  letter-spacing: 0.01em;
+  text-align: center;
+  text-decoration: none;
+  transition: background 200ms ease, color 200ms ease, box-shadow 200ms ease;
+}
+
+.ascent .panel__contact:hover {
+  background: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--bg-b);
 }
 
 .ascent main {
@@ -505,8 +626,20 @@
   gap: 22px;
 }
 
-.skill-group .chips {
-  max-width: none;
+.ascent .skill-group .edu__label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+}
+
+.ascent p.skill-line {
+  margin: 0;
+  max-width: 54ch;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 19px;
+  line-height: 1.65;
+  color: var(--text-soft);
 }
 
 .ascent__cap {

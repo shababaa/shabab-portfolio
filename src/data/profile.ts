@@ -21,6 +21,8 @@ export const profile = {
   phone: '437-376-2527',
   github: 'https://github.com/shababaa',
   githubHandle: 'shababaa',
+  website: 'https://simonakhter.com',
+  websiteLabel: 'simonakhter.com',
   linkedin: 'https://www.linkedin.com/in/simonakhter',
   devpost: 'https://devpost.com/simonakhter',
   resume: '/Simon_Akhter_Resume.pdf',
@@ -54,12 +56,13 @@ export const skills = {
   ],
 }
 
-export type SceneId = 'idle' | 'uhn' | 'zomp' | 'ninjas' | 'market' | 'skylink'
+export type SceneId = 'idle' | 'uhn' | 'zomp' | 'ninjas' | 'market' | 'skylink' | 'docuedit'
 
 export const experience = [
   {
     id: 'uhn',
     org: 'University Health Network',
+    short: 'UHN',
     unit: 'Princess Margaret Cancer Centre',
     title: 'Software Engineer Intern',
     when: 'Sep 2026 – Present',
@@ -68,7 +71,7 @@ export const experience = [
     year: 2026,
     scene: 'uhn' as const,
     summary:
-      'Shipping full-stack features on a research intranet used by 6,000+ staff — 60% lower query latency and 40% faster APIs.',
+      'Shipping full-stack features on a research intranet used by 6,000+ staff with 60% lower query latency and 40% faster APIs.',
     bullets: [
       'Building and redesigning UHN Research’s intranet platform serving 6,000+ researchers, clinicians, trainees, and staff by developing full-stack features across React, Next.js, Python, MySQL, and dotCMS.',
       'Optimizing MySQL data access by profiling query execution plans, eliminating N+1 queries, designing composite indexes, and refactoring joins, reducing database query latency by 60%.',
@@ -78,6 +81,7 @@ export const experience = [
   {
     id: 'zomp',
     org: 'Zomp',
+    short: 'Zomp',
     unit: 'Documentation platform',
     title: 'Software Engineer Intern',
     when: 'Feb 2026 – May 2026',
@@ -86,7 +90,7 @@ export const experience = [
     year: 2026,
     scene: 'zomp' as const,
     summary:
-      'Built a self-hosted documentation CMS behind 10+ sites — deployments down 96% and 8 manual steps down to 1.',
+      'Built a self-hosted documentation CMS behind 10+ sites with deployments down 96% and 8 manual steps down to 1.',
     bullets: [
       'Built a self-hosted documentation CMS supporting 10+ documentation sites with automated GitHub-based publishing, Docker deployments, and Azure Container Apps, reducing content deployments by 96%.',
       'Implemented an automation layer handling role-based access control, file uploads, spell-check validation, and atomic GitHub commits across 10+ documentation sites, reducing manual deployment steps from 8 to 1.',
@@ -96,6 +100,7 @@ export const experience = [
   {
     id: 'codeninjas',
     org: 'Code Ninjas',
+    short: 'Code Ninjas',
     unit: 'Operations software',
     title: 'Software Developer Intern',
     when: 'May 2025 – Aug 2025',
@@ -119,7 +124,7 @@ export const projects = [
     name: 'Market Intelligence',
     blurb: 'Market-data platform on a database engine written from scratch in Go.',
     story:
-      'A Go database engine with copy-on-write B+ trees, atomic transactions, indexing, and crash recovery — then an indexed time-series pipeline across five years of AAPL. REST APIs, durable jobs, and Docker CI that race, fuzz, and crash-recover the store.',
+      'A Go database engine with copy-on-write B+ trees, atomic transactions, indexing, and crash recovery with an indexed time-series pipeline across five years of AAPL. REST APIs, durable jobs, and Docker CI that race, fuzz, and crash-recover the store.',
     year: 'Jun 2026',
     tags: ['Go', 'JavaScript', 'REST APIs', 'Machine Learning', 'Docker', 'GitHub Actions'],
     href: 'https://github.com/shababaa/market-pred-from-scratch',
@@ -139,6 +144,19 @@ export const projects = [
     metrics: ['6-aircraft fleet', '53k+ samples', '82% → 35% pass rate', 'ROC-AUC 0.86'],
     featured: true,
     scene: 'skylink' as const,
+  },
+  {
+    id: 'docuedit',
+    name: 'DocuEdit',
+    blurb: 'AI documentation platform that turns selected code into a collaborative doc.',
+    story:
+      'A full-stack platform that turns selected code into editable technical documentation. WebSockets keep edits in sync across users in real time, MySQL stores the documents and their CRDT state, and a VS Code extension pushes selected files straight into the generation pipeline — code selection, generation, storage, and web editing in one workflow.',
+    year: 'Jan 2026 – Jun 2026',
+    tags: ['React', 'JavaScript', 'WebSockets', 'Node.js', 'Express', 'MySQL', 'OpenAI API'],
+    href: 'https://github.com/shababaa/DocumentEditor',
+    metrics: ['Real-time co-editing', 'VS Code extension', 'CRDT sync', 'OpenAI pipeline'],
+    featured: true,
+    scene: 'docuedit' as const,
   },
   {
     id: 'timetrace',

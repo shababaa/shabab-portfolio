@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react'
 import { CommandPalette } from '../../components/CommandPalette'
 import { experience, profile, projects, skills } from '../../data/profile'
 import { useKeyChord, useTheme } from '../../lib/hooks'
@@ -17,33 +17,40 @@ function band(from: number, to: number, i: number, n: number) {
 const jobAlts = experience.map((_, i) => band(10_800, 7_200, i, experience.length))
 const projectAlts = featured.map((_, i) => band(5_400, 2_800, i, featured.length))
 
-const waypoints = [
-  { ft: CEILING, title: 'Ceiling', body: `${profile.name} · ${profile.role}` },
-  ...experience.map((j, i) => ({
-    ft: jobAlts[i],
-    title: j.org,
-    body: `${j.title} · ${j.when}. ${j.summary}`,
-  })),
-  ...featured.map((p, i) => ({
-    ft: projectAlts[i],
-    title: p.name,
-    body: p.story,
-  })),
-  {
-    ft: 900,
-    title: 'Education',
-    body: `${profile.degree}, ${profile.school}.`,
-  },
-  {
-    ft: 400,
-    title: 'Skills',
-    body: Object.values(skills).flat().join(', '),
-  },
+const route = [
+  { id: 'ceiling', ft: CEILING, label: 'Ceiling' },
+  ...experience.map((j, i) => ({ id: j.id, ft: jobAlts[i], label: j.short })),
+  ...featured.map((p, i) => ({ id: p.id, ft: projectAlts[i], label: p.name })),
+  { id: 'education', ft: 900, label: 'Education' },
+  { id: 'skills', ft: 400, label: 'Skills' },
 ]
 
-function altitudeFromScroll() {
-  const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1)
-  return Math.round((1 - window.scrollY / max) * CEILING)
+const LAST = route.length - 1
+const EXP_START = 1
+const PROJ_START = 1 + experience.length
+
+/** Where the reader is along the route: which stop, and how far toward the next one. */
+function readPosition() {
+  // the "you are here" line sits a little below the top of the viewport, so the
+  // ceiling is anchored where that line falls when the page is scrolled to 0
+  const offset = window.innerHeight * 0.28
+  const marker = window.scrollY + offset
+  const tops = route.map((stop, i) =>
+    i === 0 ? offset : (document.getElementById(stop.id)?.getBoundingClientRect().top ?? 0) + window.scrollY,
+  )
+
+  let i = 0
+  while (i < LAST && tops[i + 1] <= marker) i++
+
+  const span = i < LAST ? tops[i + 1] - tops[i] : 0
+  const t = span > 0 ? Math.min(Math.max((marker - tops[i]) / span, 0), 1) : 0
+  const nextFt = i < LAST ? route[i + 1].ft : route[i].ft
+
+  return {
+    index: i,
+    alt: Math.round(route[i].ft + (nextFt - route[i].ft) * t),
+    progress: (i + t) / LAST,
+  }
 }
 
 function jobView(job: (typeof experience)[number]): StageView {
@@ -72,8 +79,7 @@ function projectView(p: (typeof featured)[number], pinned = false): StageView {
 }
 
 export function Ascent() {
-  const [alt, setAlt] = useState(CEILING)
-  const [log, setLog] = useState<string[]>(['Opened at ceiling'])
+  const [pos, setPos] = useState({ index: 0, alt: CEILING, progress: 0 })
   const [palette, setPalette] = useState(false)
   const [peek, setPeek] = useState<StageView | null>(null)
   const [pinned, setPinned] = useState<StageView | null>(null)
@@ -110,11 +116,16 @@ export function Ascent() {
   }
 
   useEffect(() => {
-    const onScroll = () => setAlt(altitudeFromScroll())
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    // re-measures when a card expands, since that moves every section below it
+    const track = () => setPos(readPosition())
+    track()
+    window.addEventListener('scroll', track, { passive: true })
+    window.addEventListener('resize', track)
+    return () => {
+      window.removeEventListener('scroll', track)
+      window.removeEventListener('resize', track)
+    }
+  }, [expanded])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -124,22 +135,17 @@ export function Ascent() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const nearby = useMemo(
-    () => waypoints.reduce((best, w) => (Math.abs(w.ft - alt) < Math.abs(best.ft - alt) ? w : best)),
-    [alt],
-  )
-
-  function mark(title: string) {
-    setLog((prev) => [`Looked at ${title}`, ...prev.filter((row) => row !== `Looked at ${title}`)].slice(0, 8))
+  function flyTo(id: string) {
+    if (id === 'ceiling') {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  async function exportLog() {
-    const text = [`Visit log — ${profile.name}`, ...log, profile.email, profile.resume].join('\n')
-    await navigator.clipboard.writeText(text)
-    setLog((prev) => ['Log copied', ...prev].slice(0, 8))
-  }
-
+  const alt = pos.alt
   const climb = Math.round((alt / CEILING) * 100)
+  const descent = pos.progress * 100
   const stage = pinned ?? peek ?? idleView()
 
   return (
@@ -159,17 +165,53 @@ export function Ascent() {
           {alt.toLocaleString()}
           <span> ft</span>
         </strong>
-        <p className="inst">Nearby</p>
-        <em>{nearby.title}</em>
-        <p className="inst">Visited</p>
-        <ol>
-          {log.map((l, i) => (
-            <li key={`${l}-${i}`}>{l}</li>
-          ))}
-        </ol>
-        <button type="button" onClick={exportLog}>
-          Copy visit log
-        </button>
+        <p className="inst">Flight path</p>
+        <nav className="route" aria-label="Sections">
+          <span className="route__rail" aria-hidden="true">
+            <span className="route__flown" style={{ height: `${descent}%` }} />
+            <span className="route__needle" style={{ top: `${descent}%` }} />
+          </span>
+          <ul>
+            {route.map((stop, i) => {
+              const state = i === pos.index ? 'is-current' : i < pos.index ? 'is-passed' : ''
+              const layer = i === EXP_START ? 'Experience' : i === PROJ_START ? 'Projects' : null
+              const layerOn =
+                (layer === 'Experience' && pos.index >= EXP_START && pos.index < PROJ_START) ||
+                (layer === 'Projects' && pos.index >= PROJ_START && pos.index < PROJ_START + featured.length)
+              return (
+                <Fragment key={stop.id}>
+                  {layer && (
+                    <li className="route__layer">
+                      <button
+                        type="button"
+                        className={layerOn ? 'is-current' : ''}
+                        onClick={() => flyTo(layer === 'Experience' ? experience[0].id : featured[0].id)}
+                      >
+                        {layer}
+                      </button>
+                    </li>
+                  )}
+                  <li>
+                    <button
+                      type="button"
+                      className={state}
+                      onClick={() => flyTo(stop.id)}
+                      aria-current={i === pos.index ? 'true' : undefined}
+                    >
+                      <span className="route__dot" aria-hidden="true" />
+                      <span className="route__name">{stop.label}</span>
+                      <span className="route__ft">{stop.ft.toLocaleString()}</span>
+                    </button>
+                  </li>
+                </Fragment>
+              )
+            })}
+          </ul>
+        </nav>
+
+        <a className="panel__contact" href={`mailto:${profile.email}`}>
+          Contact
+        </a>
       </aside>
 
       <main>
@@ -194,6 +236,10 @@ export function Ascent() {
             Scroll down to descend through recent work; hover or click a project and it opens on the right.
           </p>
 
+          <p className="lede">
+            I'm very interested in distributed systems and currently learning quantum mechanics and machine learning.
+          </p>
+
           <nav className="social" aria-label="Contact">
             <a href={profile.github} target="_blank" rel="noreferrer">
               GitHub
@@ -214,10 +260,7 @@ export function Ascent() {
               className={`ascent__card${open ? ' is-expanded' : ''}${
                 (pinned ?? peek)?.id === job.id ? ' is-open' : ''
               }`}
-              onMouseEnter={() => {
-                mark(job.org)
-                show(jobView(job))
-              }}
+              onMouseEnter={() => show(jobView(job))}
               onMouseLeave={hide}
               onClick={() => {
                 toggleExpand(job.id)
@@ -273,10 +316,7 @@ export function Ascent() {
               className={`ascent__card ascent__project${open ? ' is-expanded' : ''}${
                 active ? ' is-open' : ''
               }`}
-              onMouseEnter={() => {
-                mark(p.name)
-                show(projectView(p))
-              }}
+              onMouseEnter={() => show(projectView(p))}
               onMouseLeave={hide}
               onClick={() => {
                 toggleExpand(p.id)
@@ -353,11 +393,7 @@ export function Ascent() {
             {Object.entries(skills).map(([group, items]) => (
               <div key={group} className="skill-group">
                 <p className="edu__label">{group}</p>
-                <ul className="chips">
-                  {items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
+                <p className="skill-line">{items.join(', ')}</p>
               </div>
             ))}
           </div>

@@ -150,12 +150,41 @@ function SceneSkylink() {
   )
 }
 
+function SceneDocuEdit() {
+  const cardW = 200
+  const cardH = 150
+  const ox = (320 - cardW) / 2
+  const oy = (220 - cardH) / 2
+  const rows = [120, 150, 96, 138, 110]
+  return (
+    <svg className="scene-svg" viewBox="0 0 320 220" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      <rect className="scene-card" x={ox} y={oy} width={cardW} height={cardH} rx="14" />
+      {rows.map((w, i) => (
+        <rect
+          key={i}
+          className={i % 2 ? 'scene-bar scene-bar--dim' : 'scene-bar'}
+          x={ox + 20}
+          y={oy + 26 + i * 22}
+          width={w}
+          height="8"
+          rx="4"
+        />
+      ))}
+      <line className="scene-line" x1={ox + 150} x2={ox + 150} y1={oy + 20} y2={oy + 42} />
+      <circle className="scene-dot" cx={ox + 150} cy={oy + 17} r="3.5" />
+      <line className="scene-line scene-line--soft" x1={ox + 122} x2={ox + 122} y1={oy + 86} y2={oy + 108} />
+      <circle className="scene-dot" cx={ox + 122} cy={oy + 83} r="3.5" />
+    </svg>
+  )
+}
+
 function Scene({ id }: { id: SceneId }) {
   if (id === 'uhn') return <SceneUhn />
   if (id === 'zomp') return <SceneZomp />
   if (id === 'ninjas') return <SceneNinjas />
   if (id === 'market') return <SceneMarket />
   if (id === 'skylink') return <SceneSkylink />
+  if (id === 'docuedit') return <SceneDocuEdit />
   return <SceneIdle />
 }
 
