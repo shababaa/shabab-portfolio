@@ -427,6 +427,18 @@
   transition: border-color 240ms ease, background 240ms ease;
 }
 
+.ascent__chapter {
+  margin-bottom: 0;
+}
+
+.ascent__chapter h2 {
+  margin-bottom: 0;
+}
+
+.ascent .ascent__chapter + article {
+  margin-top: 20px;
+}
+
 .ascent__card,
 .ascent__project {
   cursor: pointer;
@@ -948,8 +960,8 @@
   .ascent__panel ol {
     margin-bottom: 12px;
   }
-  .ascent main {
-    padding-bottom: 280px;
+  .ascent__stage {
+    display: none;
   }
   /* the panel scrolls away at this width, so keep the toggle reachable */
   .ascent__mast .theme-toggle {

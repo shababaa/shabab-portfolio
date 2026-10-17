@@ -186,7 +186,7 @@ export function Ascent() {
                       <button
                         type="button"
                         className={layerOn ? 'is-current' : ''}
-                        onClick={() => flyTo(layer === 'Experience' ? experience[0].id : featured[0].id)}
+                        onClick={() => flyTo(layer === 'Experience' ? 'experience' : 'projects')}
                       >
                         {layer}
                       </button>
@@ -252,6 +252,11 @@ export function Ascent() {
           </nav>
         </header>
 
+        <section className="ascent__block ascent__chapter" id="experience">
+          <h2>Experience</h2>
+        </section>
+
+
         {experience.map((job, i) => {
           const open = isExpanded(job.id)
           return (
@@ -306,6 +311,10 @@ export function Ascent() {
             </article>
           )
         })}
+
+        <section className="ascent__block ascent__chapter" id="projects">
+          <h2>Projects</h2>
+        </section>
 
         {featured.map((p, i) => {
           const active = (pinned ?? peek)?.id === p.id
