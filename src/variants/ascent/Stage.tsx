@@ -106,6 +106,35 @@ function SceneNinjas() {
   )
 }
 
+function SceneVectorforge() {
+  const clusters = [
+    { cx: 92, cy: 78, r: 36, n: 5 },
+    { cx: 168, cy: 128, r: 32, n: 4 },
+    { cx: 236, cy: 72, r: 30, n: 4 },
+  ]
+  return (
+    <svg className="scene-svg" viewBox="0 0 320 220" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+      {clusters.map((c, i) => (
+        <g key={i}>
+          <circle className="scene-ring" cx={c.cx} cy={c.cy} r={c.r} />
+          {Array.from({ length: c.n }, (_, j) => {
+            const a = (j / c.n) * Math.PI * 2 - Math.PI / 2
+            return (
+              <circle
+                key={j}
+                className="scene-dot"
+                cx={c.cx + Math.cos(a) * (c.r * 0.45)}
+                cy={c.cy + Math.sin(a) * (c.r * 0.45)}
+                r="4"
+              />
+            )
+          })}
+        </g>
+      ))}
+    </svg>
+  )
+}
+
 function SceneMarket() {
   const candles = [48, 72, 40, 96, 64, 110, 58, 88, 70]
   const barW = 12
@@ -182,6 +211,7 @@ function Scene({ id }: { id: SceneId }) {
   if (id === 'uhn') return <SceneUhn />
   if (id === 'zomp') return <SceneZomp />
   if (id === 'ninjas') return <SceneNinjas />
+  if (id === 'vectorforge') return <SceneVectorforge />
   if (id === 'market') return <SceneMarket />
   if (id === 'skylink') return <SceneSkylink />
   if (id === 'docuedit') return <SceneDocuEdit />

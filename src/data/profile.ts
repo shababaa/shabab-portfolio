@@ -33,15 +33,15 @@ export const profile = {
 export const stats = [
   { value: '60%', label: 'MySQL latency cut', detail: 'UHN — plans, indexes, join refactors' },
   { value: '40%', label: 'API response drop', detail: 'UHN — 15+ REST APIs, ACID, migrations' },
-  { value: '96%', label: 'Docs deploy cut', detail: 'Zomp — 10+ sites, GitHub publishing' },
-  { value: '8 → 1', label: 'Manual deploy steps', detail: 'Zomp automation layer' },
+  { value: '96%', label: 'Docs deploy cut', detail: 'Zomp — 8 manual steps down to 1' },
+  { value: '39×', label: 'Faster vector search', detail: 'VectorForge — 87.2 ms to 2.21 ms, 94.9% of exact top 10' },
   { value: '0.86', label: 'Anomaly ROC-AUC', detail: 'Skylink Ops — unseen later flights' },
   { value: '262', label: 'req/s locally', detail: 'Market intelligence REST, 93 ms p95' },
 ]
 
 export const skills = {
-  Languages: ['Go', 'Python', 'TypeScript', 'JavaScript', 'C++', 'Java', 'C#', 'SQL'],
-  Frameworks: ['React', 'Next.js', 'Node.js', 'Express', 'FastAPI', 'Flask', 'ASP.NET'],
+  Languages: ['Go', 'Python', 'TypeScript', 'JavaScript', 'SQL'],
+  Frameworks: ['React', 'Next.js', 'Node.js', 'Express', 'FastAPI'],
   'Developer Tools': [
     'MySQL',
     'PostgreSQL',
@@ -50,13 +50,12 @@ export const skills = {
     'Docker',
     'Git',
     'GitHub Actions',
-    'AWS',
     'Azure',
     'Linux',
   ],
 }
 
-export type SceneId = 'idle' | 'uhn' | 'zomp' | 'ninjas' | 'market' | 'skylink' | 'docuedit'
+export type SceneId = 'idle' | 'uhn' | 'zomp' | 'ninjas' | 'vectorforge' | 'market' | 'skylink' | 'docuedit'
 
 export const experience = [
   {
@@ -73,9 +72,9 @@ export const experience = [
     summary:
       'Shipping full-stack features on a research intranet used by 6,000+ staff with 60% lower query latency and 40% faster APIs.',
     bullets: [
-      'Building and redesigning UHN Research’s intranet platform serving 6,000+ researchers, clinicians, trainees, and staff by developing full-stack features across React, Next.js, Python, MySQL, and dotCMS.',
-      'Optimizing MySQL data access by profiling query execution plans, eliminating N+1 queries, designing composite indexes, and refactoring joins, reducing database query latency by 60%.',
-      'Designing backend data models and transactional workflows with ACID guarantees, foreign key constraints, and automated migrations; developed 15+ REST APIs reducing API response latency by 40%.',
+      'Reduced MySQL query latency by 60% on UHN Research’s intranet serving 6,000+ researchers and staff by profiling execution plans, eliminating N+1 queries, and adding composite indexes.',
+      'Cut API response latency by 40% across 15+ REST endpoints by designing transactional data models with foreign keys, ACID workflows, and automated migrations.',
+      'Rolled out React and Next.js intranet pages to 6,000+ researchers and staff by replacing CMS templates while keeping MySQL as the source of truth.',
     ],
   },
   {
@@ -92,9 +91,9 @@ export const experience = [
     summary:
       'Built a self-hosted documentation CMS behind 10+ sites with deployments down 96% and 8 manual steps down to 1.',
     bullets: [
-      'Built a self-hosted documentation CMS supporting 10+ documentation sites with automated GitHub-based publishing, Docker deployments, and Azure Container Apps, reducing content deployments by 96%.',
-      'Implemented an automation layer handling role-based access control, file uploads, spell-check validation, and atomic GitHub commits across 10+ documentation sites, reducing manual deployment steps from 8 to 1.',
-      'Designed CI/CD pipelines using GitHub Actions, Docker, Azure Container Registry, and Azure Container Apps to automate image builds, registry pushes, and production validation with automated deployment validation.',
+      'Cut content deployments by 96% (8 manual steps to 1) across 10+ documentation sites by building a self-hosted CMS with GitHub publishing, role-based access, uploads, and Docker on Azure Container Apps.',
+      'Removed manual image builds and production checks from those deploys by building GitHub Actions pipelines with Docker and Azure Container Registry.',
+      'Cut failed and partial publishes across 10+ documentation sites by committing updates atomically to GitHub and blocking deploys that failed spell-check or validation.',
     ],
   },
   {
@@ -109,26 +108,39 @@ export const experience = [
     year: 2025,
     scene: 'ninjas' as const,
     summary:
-      'Built a check-in portal running in 2 locations for 200+ families — 25% more API throughput and 8 features shipped.',
+      'Built a check-in portal running in 2 locations for 200+ families with 25% more API throughput.',
     bullets: [
-      'Designed and deployed an interactive check-in portal across 2 Code Ninjas locations, enabling live student tracking and reporting for 200+ families through a React, Node.js, Express.js, and MongoDB application.',
-      'Enhanced API throughput by 25% by migrating CPU-intensive tasks to Node.js worker threads, preventing event loop blocking and improving backend responsiveness during concurrent check-in and data processing workflows.',
-      'Shipped 8 production features including real-time notifications, uploads, and reporting tools, reducing feature delivery cycles from 2 weeks to 5 days.',
+      'Launched a check-in portal across 2 locations serving 200+ families by building a React, Node.js, Express, and MongoDB app with live student tracking and reporting.',
+      'Increased API throughput by 25% during concurrent check-in by moving CPU-heavy work onto Node.js worker threads so the event loop stayed responsive.',
+      'Cut feature delivery from 2 weeks to 5 days across both locations by shipping live notifications, file uploads, and reporting in production.',
     ],
   },
 ]
 
 export const projects = [
   {
+    id: 'vectorforge',
+    name: 'VectorForge',
+    blurb: 'Semantic search engine and vector database on a from-scratch Go B+tree store.',
+    story:
+      'Indexes 7,478 code and document chunks and searches by meaning, not keywords. IVF cuts lookup 39× across 523K embeddings while keeping 94.9% Recall@10. Fine-tuning MiniLM lifted ranking 8.4%, and a persistent IVF index on 100,000 vectors reloads 53× faster than retraining.',
+    year: 'Oct 2026',
+    tags: ['Go', 'Python', 'React', 'TypeScript', 'FastAPI', 'PyTorch'],
+    href: 'https://github.com/shababaa/vectorforge',
+    metrics: ['7,478 chunks', '39× faster search', '94.9% Recall@10', '53× faster IVF reload'],
+    featured: true,
+    scene: 'vectorforge' as const,
+  },
+  {
     id: 'market',
     name: 'Market Intelligence',
     blurb: 'Market-data platform on a database engine written from scratch in Go.',
     story:
-      'A Go database engine with copy-on-write B+ trees, atomic transactions, indexing, and crash recovery with an indexed time-series pipeline across five years of AAPL. REST APIs, durable jobs, and Docker CI that race, fuzz, and crash-recover the store.',
+      'A Go database engine with copy-on-write B+ trees, transactions, and crash recovery. Inserts on 1,000 keys are 77% faster and use 85% less memory after page-split and key-compression work. Five years of AAPL bars, leak-safe features, and a local load test at 262 req/s (93 ms p95).',
     year: 'Jun 2026',
-    tags: ['Go', 'JavaScript', 'REST APIs', 'Machine Learning', 'Docker', 'GitHub Actions'],
+    tags: ['Go', 'B+ Trees', 'Transactions', 'REST APIs', 'Docker', 'GitHub Actions'],
     href: 'https://github.com/shababaa/market-pred-from-scratch',
-    metrics: ['77% faster inserts', '85% fewer allocations', '262 req/s', '93 ms p95'],
+    metrics: ['77% faster inserts', '85% less memory', '262 req/s local', '93 ms p95'],
     featured: true,
     scene: 'market' as const,
   },
